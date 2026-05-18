@@ -4,7 +4,7 @@ A curated list of open-source LLM gateways, AI gateways, and model-routing proxi
 
 LLM gateways sit between applications and model providers. They usually handle provider routing, retries, fallbacks, observability, budgets, access control, guardrails, and OpenAI-compatible API translation.
 
-Related terms include AI gateway, model gateway, inference gateway, LLM proxy, model router, semantic router, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, provider passthrough gateway, dashboard-backed LLM gateway, and API format-conversion gateway.
+Related terms include AI gateway, model gateway, inference gateway, LLM proxy, model router, semantic router, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, dashboard-backed LLM gateway, and API format-conversion gateway.
 
 This list prioritizes public repositories that act as gateway, proxy, router, or model-access infrastructure rather than generic SDKs or end-user AI applications.
 
@@ -22,6 +22,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 | --- | --- | --- | --- | --- | --- | --- |
 | LiteLLM | [BerriAI/litellm](https://github.com/BerriAI/litellm) | Python | Other | Teams that want broad provider coverage and OpenAI-compatible routing quickly. | 100+ provider support, cost tracking, load balancing, logging, guardrails, active ecosystem. | Python proxy can be less attractive for very low-latency edge gateway use cases; license should be reviewed before commercial embedding. |
 | Portkey Gateway | [Portkey-AI/gateway](https://github.com/Portkey-AI/gateway) | TypeScript | MIT | Product teams that want gateway plus guardrails and model routing. | Friendly API, many model integrations, guardrails, model router, permissive license. | Some ecosystem value is tied to Portkey's broader platform; self-hosting depth should be checked for each feature. |
+| Helicone AI Gateway | [Helicone/ai-gateway](https://github.com/Helicone/ai-gateway) | Rust | GPL-3.0 | Teams that want a lightweight OpenAI-compatible gateway with routing, rate limits, cache, and observability hooks. | Rust implementation, 100+ model/provider positioning, smart routing, fallbacks, rate limits, caching, Docker/self-hosting, and Helicone/OpenTelemetry observability. | License metadata should be reviewed because the repository sidebar and README text differ; some observability value is tied to the Helicone ecosystem. |
 | OmniRoute | [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) | TypeScript | MIT | Developers and teams that want a local or hosted AI router for many providers and coding tools through one endpoint. | OpenAI-compatible APIs, broad provider catalog, multiple routing strategies, automatic fallback, prompt compression, format translation, MCP/A2A integrations, and desktop/PWA options. | Very broad product surface with marketing-heavy claims; production maturity, security model, and provider behavior should be validated carefully. |
 | Envoy AI Gateway | [envoyproxy/ai-gateway](https://github.com/envoyproxy/ai-gateway) | Go | Apache-2.0 | Kubernetes/cloud-native teams already aligned with Envoy Gateway. | Built on Envoy Gateway, strong infrastructure pedigree, Kubernetes-native direction. | Younger project than general API gateways; feature surface may be narrower for app-level LLMOps needs. |
 | Higress | [higress-group/higress](https://github.com/higress-group/higress) | Go | Apache-2.0 | Cloud-native API gateway users that want AI gateway capability in one gateway. | AI-native API gateway, Envoy-based, API gateway plus AI routing patterns. | Operational model is closer to full API gateway infrastructure than lightweight app proxy. |
@@ -77,6 +78,28 @@ Portkey Gateway focuses on AI gateway routing, guardrails, and model access thro
 
 - Some capabilities may be most useful alongside Portkey's hosted or broader platform components.
 - Teams should verify self-hosted behavior for the exact guardrails, observability, and routing features they need.
+
+### Helicone AI Gateway
+
+- GitHub: [Helicone/ai-gateway](https://github.com/Helicone/ai-gateway)
+- Website/docs: [docs.helicone.ai/ai-gateway](https://docs.helicone.ai/gateway)
+- Language: Rust
+- License: GPL-3.0
+
+Helicone AI Gateway is a Rust-based OpenAI-compatible gateway for routing requests across many LLM providers. It focuses on a lightweight proxy path with smart routing, load balancing, rate limits, caching, fallbacks, self-hosting, and observability through Helicone and OpenTelemetry.
+
+**Pros**
+
+- Rust implementation with a self-hostable gateway package.
+- OpenAI-compatible client path for many providers and models.
+- Supports routing strategies, provider load balancing, fallbacks, rate limits, and cache configuration.
+- Useful when gateway traffic should connect directly to observability, monitoring, and debugging workflows.
+
+**Cons**
+
+- GitHub license metadata currently shows GPL-3.0 while the README license text references Apache License, so teams should verify the effective license before adoption.
+- Some observability and management workflows are naturally strongest when used with the broader Helicone platform.
+- Provider breadth, latency, and cache claims should be validated against the exact self-hosted or cloud-hosted deployment.
 
 ### OmniRoute
 
@@ -377,6 +400,7 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 | --- | --- |
 | Maximum provider breadth and OpenAI-compatible routing | LiteLLM |
 | Guardrails and app-team-friendly model routing | Portkey Gateway |
+| Lightweight Rust gateway with observability, caching, and rate limits | Helicone AI Gateway |
 | A local or hosted AI router for many coding tools and provider accounts | OmniRoute |
 | Kubernetes-native AI traffic management on Envoy | Envoy AI Gateway |
 | API gateway plus AI gateway in a cloud-native stack | Higress |
