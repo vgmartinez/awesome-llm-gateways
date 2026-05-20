@@ -4,7 +4,7 @@ A curated list of open-source LLM gateways, AI gateways, and model-routing proxi
 
 LLM gateways sit between applications and model providers. They usually handle provider routing, retries, fallbacks, observability, budgets, access control, guardrails, and OpenAI-compatible API translation.
 
-Related terms include AI gateway, model gateway, inference gateway, LLM proxy, model router, semantic router, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, dashboard-backed LLM gateway, and API format-conversion gateway.
+Related terms include AI gateway, model gateway, inference gateway, LLM proxy, model router, semantic router, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, dashboard-backed LLM gateway, budget-aware AI router, and API format-conversion gateway.
 
 This list prioritizes public repositories that act as gateway, proxy, router, or model-access infrastructure rather than generic SDKs or end-user AI applications.
 
@@ -31,6 +31,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 | pLLM | [andreimerfu/pllm](https://github.com/andreimerfu/pllm) | Go | MIT | Teams that want a Go OpenAI-compatible gateway with route-based model orchestration, failover, and Kubernetes deployment options. | Virtual model routes, priority/latency/weighted/random routing, automatic failover, multi-key load balancing, caching, budgets, Prometheus metrics, OpenTelemetry, Docker, and Helm support. | Newer project with ambitious production claims; teams should validate provider adapters, dashboard/admin APIs, and Redis-backed routing behavior against real traffic. |
 | New API | [QuantumNous/new-api](https://github.com/QuantumNous/new-api) | Go | AGPL-3.0 | Teams that need a self-hosted AI model hub for key management, quota controls, and cross-format gateway APIs. | OpenAI-compatible, Claude-compatible, Gemini-compatible, Responses, realtime, image/audio/embedding/rerank interfaces, weighted routing, retries, user-level rate limits, Docker, and web UI. | AGPL licensing must be reviewed for hosted/commercial deployments; broad model and billing surface adds more operational policy decisions than a minimal proxy. |
 | LLM Gateway | [theopenco/llmgateway](https://github.com/theopenco/llmgateway) | TypeScript | AGPL-3.0 / Enterprise | Teams that want a self-hosted or hosted OpenAI-compatible gateway with dashboard analytics and key management. | Multi-provider routing, centralized provider keys, usage/cost analytics, performance monitoring, Docker self-hosting, and dashboard/playground apps. | Dual-license model needs review; the monorepo includes several apps and backing services, so it is heavier than a minimal proxy. |
+| Routerly | [Inebrio/Routerly](https://github.com/Inebrio/Routerly) | TypeScript | AGPL-3.0 | Teams that want a self-hosted OpenAI/Anthropic-compatible router with cost controls and project isolation. | Multi-policy routing, native OpenAI and Anthropic API compatibility, local/provider model targets, cost tracking, budget enforcement, project tokens, CLI, dashboard, and Docker support. | AGPL licensing needs review; newer project with a smaller community, and LLM-powered routing claims should be validated against real traffic. |
 | OpenZiti LLM Gateway | [openziti/llm-gateway](https://github.com/openziti/llm-gateway) | Go | Apache-2.0 | Teams that need OpenAI-compatible routing across hosted and private inference backends, especially behind NAT or private networks. | Single Go binary, semantic routing, Anthropic translation, virtual API keys, OpenTelemetry metrics, multi-endpoint load balancing, and zrok/OpenZiti zero-trust connectivity. | Early-stage project with a smaller community; provider coverage is narrower than broad aggregation gateways and strongest when its zero-trust networking model is needed. |
 | Kong Gateway | [Kong/kong](https://github.com/Kong/kong) | Lua | Apache-2.0 | Enterprises that already need API management and want AI gateway features in the same stack. | Mature API gateway, plugin ecosystem, AI gateway and MCP-related features, strong operations story. | Heavier than purpose-built LLM proxies; some advanced workflows may depend on Kong ecosystem/product choices. |
 | Apache APISIX | [apache/apisix](https://github.com/apache/apisix) | Lua | Apache-2.0 | Teams that want a cloud-native API gateway with AI gateway capabilities. | Mature Apache project, API management, Kubernetes ingress, plugins, AI gateway direction. | More general-purpose API gateway than LLM-specific proxy; AI workflows may need plugin/configuration work. |
@@ -270,6 +271,29 @@ LLM Gateway is a TypeScript API gateway for routing LLM requests through a unifi
 - Monorepo includes UI, playground, API, gateway, docs, admin, database, and shared packages, which adds more operational surface than small single-binary gateways.
 - Some advanced billing, retention, organization, and provider-key features are enterprise-scoped, so self-hosted feature boundaries should be checked before adoption.
 
+### Routerly
+
+- GitHub: [Inebrio/Routerly](https://github.com/Inebrio/Routerly)
+- Website/docs: [routerly.ai](https://www.routerly.ai/)
+- Language: TypeScript
+- License: AGPL-3.0
+
+Routerly is a self-hosted LLM gateway for routing requests across providers such as OpenAI, Anthropic, Gemini, Mistral, Ollama, xAI, Cohere, and custom HTTP backends. It exposes OpenAI-compatible and Anthropic-compatible APIs, with project-scoped tokens, routing policies, cost tracking, budget enforcement, a CLI, dashboard, and Docker deployment path.
+
+**Pros**
+
+- Native OpenAI and Anthropic API compatibility is useful for teams that do not want every client forced through one API shape.
+- Multi-policy routing covers cost, health, performance, capability, context, budget, rate-limit, fairness, and optional LLM-assisted selection.
+- Project isolation, budget limits, and usage reporting are built into the gateway rather than delegated entirely to external tooling.
+- Runs self-hosted without requiring PostgreSQL or Redis for the core gateway path.
+
+**Cons**
+
+- AGPL-3.0 licensed, so hosted, modified, or commercial deployment plans need license review.
+- Smaller and newer than established gateway projects, with fewer third-party production references.
+- LLM-assisted routing can add another model call and policy failure mode; teams should benchmark deterministic and LLM-powered routing separately.
+- Provider coverage is narrower than broad aggregators such as LiteLLM, Portkey Gateway, or New API.
+
 ### OpenZiti LLM Gateway
 
 - GitHub: [openziti/llm-gateway](https://github.com/openziti/llm-gateway)
@@ -409,6 +433,7 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 | Go gateway with virtual model routes, failover, and Kubernetes deployment options | pLLM |
 | Self-hosted model hub with key/quota management and cross-format APIs | New API |
 | Dashboard-backed OpenAI-compatible gateway with key management and usage analytics | LLM Gateway |
+| Self-hosted OpenAI/Anthropic-compatible routing with project budgets and token isolation | Routerly |
 | OpenAI-compatible routing to private inference backends across NAT or private networks | OpenZiti LLM Gateway |
 | Enterprise API management plus AI gateway features | Kong Gateway |
 | Apache API gateway maturity with AI gateway direction | Apache APISIX |
