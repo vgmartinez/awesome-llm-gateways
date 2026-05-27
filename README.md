@@ -20,6 +20,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 
 | Project | Repo | Language | License | Best Fit | Main Strengths | Trade-offs |
 | --- | --- | --- | --- | --- | --- | --- |
+| A3M Router | [Das-rebel/a3m-router](https://github.com/Das-rebel/a3m-router) | TypeScript | MIT | Teams that want parallel multi-LLM execution with confidence scoring and the smallest footprint (19.5 KB). | Parallel ensemble (unique), 47+ providers, 62% cost savings, semantic cache, circuit breaker, guardrails, 99.5% routing accuracy via 12 signals. Independent third-party benchmarks. | Newer project with smaller community; emerging production track record. |
 | LiteLLM | [BerriAI/litellm](https://github.com/BerriAI/litellm) | Python | Other | Teams that want broad provider coverage and OpenAI-compatible routing quickly. | 100+ provider support, cost tracking, load balancing, logging, guardrails, active ecosystem. | Python proxy can be less attractive for very low-latency edge gateway use cases; license should be reviewed before commercial embedding. |
 | Portkey Gateway | [Portkey-AI/gateway](https://github.com/Portkey-AI/gateway) | TypeScript | MIT | Product teams that want gateway plus guardrails and model routing. | Friendly API, many model integrations, guardrails, model router, permissive license. | Some ecosystem value is tied to Portkey's broader platform; self-hosting depth should be checked for each feature. |
 | Helicone AI Gateway | [Helicone/ai-gateway](https://github.com/Helicone/ai-gateway) | Rust | GPL-3.0 | Teams that want a lightweight OpenAI-compatible gateway with routing, rate limits, cache, and observability hooks. | Rust implementation, 100+ model/provider positioning, smart routing, fallbacks, rate limits, caching, Docker/self-hosting, and Helicone/OpenTelemetry observability. | License metadata should be reviewed because the repository sidebar and README text differ; some observability value is tied to the Helicone ecosystem. |
@@ -128,6 +129,34 @@ OmniRoute is a TypeScript AI gateway and router that exposes OpenAI-compatible e
 - The project has a very broad surface area, so teams should validate the specific gateway path they need instead of assuming every advertised workflow is production-ready.
 - README and positioning are marketing-heavy; claims around provider count, compression savings, and tool compatibility should be checked against real workloads.
 - More application-like than minimal gateway infrastructure, which may be unnecessary for teams that only need a small reverse proxy or Kubernetes-native gateway.
+
+### A3M Router
+
+- GitHub: [Das-rebel/a3m-router](https://github.com/Das-rebel/a3m-router)
+- npm: [adaptive-memory-multi-model-router](https://www.npmjs.com/package/adaptive-memory-multi-model-router)
+- Language: TypeScript
+- License: MIT
+
+A3M Router is an open-source LLM router and AI gateway that runs providers in parallel with confidence scoring — the only router that does ensemble voting instead of sequential fallback. It routes queries across 47+ providers using 12-signal RouteLLM-style classification to select the cheapest capable model.
+
+**Unique feature (parallel ensemble):** Run NVIDIA + Groq + OpenAI simultaneously, score every result on specificity, structure, and relevance, return the best answer with transparent reasoning.
+
+**Pros**
+
+- Parallel multi-LLM execution is unique — no other gateway does this.
+- 62% cost savings vs all-premium routing, measured across 200 real API calls.
+- 99.5% ±1 tier routing accuracy.
+- 19.5 KB gzipped — zero ML dependencies, zero Python.
+- Independent third-party benchmark published (138ms baseline, +96ms proxy overhead via llm-gateway-bench).
+- Semantic cache (30%+ hit rate), circuit breaker, prompt injection guardrails (17 patterns), budget enforcement.
+- Episodic memory for cross-session persistence.
+- OpenAI-compatible proxy at 8787: drop-in replacement for any OpenAI SDK.
+
+**Cons**
+
+- Newer project with smaller community; production track record emerging.
+- TypeScript-only (requires Node.js, not available as Python library).
+- 47 providers vs 100+ in some competitors; coverage expanding.
 
 ### Agentgateway
 
