@@ -4,7 +4,7 @@ A curated list of open-source LLM gateways, AI gateways, and model-routing proxi
 
 LLM gateways sit between applications and model providers. They usually handle provider routing, retries, fallbacks, observability, budgets, access control, guardrails, and OpenAI-compatible API translation.
 
-Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
+Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
 
 This list prioritizes public repositories that act as gateway, proxy, router, or model-access infrastructure rather than generic SDKs or end-user AI applications.
 
@@ -24,6 +24,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 | Portkey Gateway | [Portkey-AI/gateway](https://github.com/Portkey-AI/gateway) | TypeScript | MIT | Product teams that want gateway plus guardrails and model routing. | Friendly API, many model integrations, guardrails, model router, permissive license. | Some ecosystem value is tied to Portkey's broader platform; self-hosting depth should be checked for each feature. |
 | Helicone AI Gateway | [Helicone/ai-gateway](https://github.com/Helicone/ai-gateway) | Rust | GPL-3.0 | Teams that want a lightweight OpenAI-compatible gateway with routing, rate limits, cache, and observability hooks. | Rust implementation, 100+ model/provider positioning, smart routing, fallbacks, rate limits, caching, Docker/self-hosting, and Helicone/OpenTelemetry observability. | License metadata should be reviewed because the repository sidebar and README text differ; some observability value is tied to the Helicone ecosystem. |
 | OmniRoute | [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) | TypeScript | MIT | Developers and teams that want a local or hosted AI router for many providers and coding tools through one endpoint. | OpenAI-compatible APIs, broad provider catalog, multiple routing strategies, automatic fallback, prompt compression, format translation, MCP/A2A integrations, and desktop/PWA options. | Very broad product surface with marketing-heavy claims; production maturity, security model, and provider behavior should be validated carefully. |
+| NadirClaw | [NadirRouter/NadirClaw](https://github.com/NadirRouter/NadirClaw) | Python | MIT | Developers who want a local OpenAI/Anthropic-compatible router that sends simple prompts to cheaper or local models. | Prompt-complexity routing, coding-tool compatibility, OpenAI and Anthropic API surfaces, fallback chains, streaming, cost tracking, budgets, caching, dashboard, and Docker support. | Cost-savings claims and classifier accuracy should be validated on real workloads; local-first routing is less suited to teams that need centralized multi-tenant governance out of the box. |
 | Agentgateway | [agentgateway/agentgateway](https://github.com/agentgateway/agentgateway) | Rust | Apache-2.0 | Platform teams that need agentic AI traffic governance across LLM, MCP, and A2A flows. | OpenAI-compatible LLM routing, MCP and A2A gateway support, budget/spend controls, prompt enrichment, load balancing, failover, guardrails, auth/RBAC, OpenTelemetry, and Kubernetes options. | Broader agentic-proxy scope than a narrow model gateway; teams should validate LLM provider behavior and operational maturity against their own agent/tool traffic. |
 | Envoy AI Gateway | [envoyproxy/ai-gateway](https://github.com/envoyproxy/ai-gateway) | Go | Apache-2.0 | Kubernetes/cloud-native teams already aligned with Envoy Gateway. | Built on Envoy Gateway, strong infrastructure pedigree, Kubernetes-native direction. | Younger project than general API gateways; feature surface may be narrower for app-level LLMOps needs. |
 | Higress | [higress-group/higress](https://github.com/higress-group/higress) | Go | Apache-2.0 | Cloud-native API gateway users that want AI gateway capability in one gateway. | AI-native API gateway, Envoy-based, API gateway plus AI routing patterns. | Operational model is closer to full API gateway infrastructure than lightweight app proxy. |
@@ -129,6 +130,28 @@ OmniRoute is a TypeScript AI gateway and router that exposes OpenAI-compatible e
 - The project has a very broad surface area, so teams should validate the specific gateway path they need instead of assuming every advertised workflow is production-ready.
 - README and positioning are marketing-heavy; claims around provider count, compression savings, and tool compatibility should be checked against real workloads.
 - More application-like than minimal gateway infrastructure, which may be unnecessary for teams that only need a small reverse proxy or Kubernetes-native gateway.
+
+### NadirClaw
+
+- GitHub: [NadirRouter/NadirClaw](https://github.com/NadirRouter/NadirClaw)
+- Website: [getnadir.com](https://getnadir.com)
+- Language: Python
+- License: MIT
+
+NadirClaw is a local-first LLM router and cost optimizer for coding tools and OpenAI-compatible clients. It classifies prompts by complexity, routes simple requests to cheaper or local models, keeps complex work on stronger models, and exposes OpenAI-compatible chat completions plus an Anthropic-compatible messages endpoint.
+
+**Pros**
+
+- MIT licensed.
+- Strong fit for Claude Code, Codex, Cursor, Continue, OpenClaw, and other tools that can point at an OpenAI-compatible base URL.
+- Includes prompt-complexity routing, fallback chains, streaming, session persistence, context-window filtering, cost tracking, budget controls, caching, Prometheus metrics, OpenTelemetry tracing, a dashboard, and Docker deployment.
+- Local deployment keeps provider keys under the operator's control and can route directly to Gemini, OpenAI, Anthropic, Ollama, and LiteLLM-supported providers.
+
+**Cons**
+
+- Cost-savings and classifier-accuracy claims should be measured against the team's own prompts, providers, and quality thresholds.
+- Local-first design is useful for individuals and small teams, but centralized team governance is positioned more strongly in the hosted/pro version.
+- Broader feature surface and coding-tool focus may be unnecessary for teams that only need a simple provider reverse proxy.
 
 ### Agentgateway
 
@@ -567,6 +590,7 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 | Guardrails and app-team-friendly model routing | Portkey Gateway |
 | Lightweight Rust gateway with observability, caching, and rate limits | Helicone AI Gateway |
 | A local or hosted AI router for many coding tools and provider accounts | OmniRoute |
+| Local prompt-complexity routing for coding tools and cost control | NadirClaw |
 | Agentic AI traffic governance across LLM, MCP, and A2A flows | Agentgateway |
 | Kubernetes-native AI traffic management on Envoy | Envoy AI Gateway |
 | API gateway plus AI gateway in a cloud-native stack | Higress |
@@ -595,6 +619,7 @@ When comparing LLM gateways, check:
 - Provider coverage and OpenAI-compatible API support.
 - API format conversion needs, such as OpenAI-compatible, Claude-compatible, Gemini-compatible, or Responses API translation.
 - Routing, fallback, retry, and load-balancing behavior.
+- Prompt classification, semantic routing, and quality/cost policy behavior.
 - Streaming support and latency overhead.
 - Authentication, key management, budget controls, and tenant isolation.
 - Logging, tracing, metrics, and cost attribution.
