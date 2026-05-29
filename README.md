@@ -4,7 +4,7 @@ A curated list of open-source LLM gateways, AI gateways, and model-routing proxi
 
 LLM gateways sit between applications and model providers. They usually handle provider routing, retries, fallbacks, observability, budgets, access control, guardrails, and OpenAI-compatible API translation.
 
-Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
+Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, API-key-rotation LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
 
 This list prioritizes public repositories that act as gateway, proxy, router, or model-access infrastructure rather than generic SDKs or end-user AI applications.
 
@@ -37,6 +37,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 | One API | [songquanpeng/one-api](https://github.com/songquanpeng/one-api) | JavaScript / Go | MIT | Teams that want a self-hosted OpenAI-format API management and key redistribution gateway with broad provider channels. | OpenAI-format access to many providers, channel management, load balancing, token quotas, user groups, model mapping, retries, Docker images, web UI, and multi-node deployment guidance. | GitHub language metadata is frontend-heavy; default credentials and public-service compliance warnings require careful deployment hardening, and format conversion is centered on OpenAI-style APIs. |
 | Squirrel | [mylxsw/llm-gateway](https://github.com/mylxsw/llm-gateway) | Python | MIT* | Teams that want a Python/FastAPI LLM gateway with a dashboard, protocol conversion, and cost-aware routing. | OpenAI, OpenAI Responses, and Anthropic-compatible APIs, rule-based routing, cost/priority/weight load balancing, retries, failover, request logging, cost analytics, Docker, SQLite/PostgreSQL, and Next.js dashboard. | GitHub license metadata is not populated even though the README badge says MIT; newer project with dashboard and storage dependencies, so teams should validate data retention, auth, and production hardening. |
 | LM-Proxy | [Nayjest/lm-proxy](https://github.com/Nayjest/lm-proxy) | Python | MIT | Developers that want a small OpenAI-compatible Python/FastAPI proxy usable as a library or standalone service. | Provider-agnostic OpenAI-format endpoint, model-pattern routing, streaming, virtual API keys, group access controls, TOML/YAML/JSON/Python config, and Google/Anthropic/OpenAI/local inference support. | Smaller project and narrower operational surface than full LLM gateway platforms; advanced governance, dashboards, and production hardening need surrounding tooling or custom extensions. |
+| LLM API Key Proxy | [Mirrowel/LLM-API-Key-Proxy](https://github.com/Mirrowel/LLM-API-Key-Proxy) | Python | Unknown | Teams that want an OpenAI/Anthropic-compatible proxy with provider translation, API-key rotation, and failover. | FastAPI proxy, OpenAI and Anthropic endpoints, Gemini/OpenAI/Anthropic/LiteLLM-backed providers, intelligent key rotation, load balancing, resilience library, and Docker deployment. | GitHub license metadata is not populated; provider translation and key-rotation behavior should be validated carefully before sharing credentials or using it in multi-tenant production. |
 | LLM Gateway | [theopenco/llmgateway](https://github.com/theopenco/llmgateway) | TypeScript | AGPL-3.0 / Enterprise | Teams that want a self-hosted or hosted OpenAI-compatible gateway with dashboard analytics and key management. | Multi-provider routing, centralized provider keys, usage/cost analytics, performance monitoring, Docker self-hosting, and dashboard/playground apps. | Dual-license model needs review; the monorepo includes several apps and backing services, so it is heavier than a minimal proxy. |
 | Routerly | [Inebrio/Routerly](https://github.com/Inebrio/Routerly) | TypeScript | AGPL-3.0 | Teams that want a self-hosted OpenAI/Anthropic-compatible router with cost controls and project isolation. | Multi-policy routing, native OpenAI and Anthropic API compatibility, local/provider model targets, cost tracking, budget enforcement, project tokens, CLI, dashboard, and Docker support. | AGPL licensing needs review; newer project with a smaller community, and LLM-powered routing claims should be validated against real traffic. |
 | OpenZiti LLM Gateway | [openziti/llm-gateway](https://github.com/openziti/llm-gateway) | Go | Apache-2.0 | Teams that need OpenAI-compatible routing across hosted and private inference backends, especially behind NAT or private networks. | Single Go binary, semantic routing, Anthropic translation, virtual API keys, OpenTelemetry metrics, multi-endpoint load balancing, and zrok/OpenZiti zero-trust connectivity. | Early-stage project with a smaller community; provider coverage is narrower than broad aggregation gateways and strongest when its zero-trust networking model is needed. |
@@ -413,6 +414,27 @@ LM-Proxy is a lightweight Python/FastAPI HTTP proxy that exposes an OpenAI-compa
 - Provider coverage and routing policy depth are narrower than larger multi-provider gateways.
 - Does not center dashboards, budget enforcement, or enterprise governance; teams needing those workflows may need additional tooling.
 
+### LLM API Key Proxy
+
+- GitHub: [Mirrowel/LLM-API-Key-Proxy](https://github.com/Mirrowel/LLM-API-Key-Proxy)
+- Language: Python
+- License: Unknown
+
+LLM API Key Proxy is a Python/FastAPI proxy and resilience library that exposes OpenAI-compatible and Anthropic-compatible endpoints across configured providers. It focuses on one endpoint for multiple LLM providers, provider translation, intelligent API-key rotation, load balancing, failover, and compatibility with clients that support custom OpenAI or Anthropic base URLs.
+
+**Pros**
+
+- Public repository with clear universal LLM gateway and proxy positioning.
+- OpenAI and Anthropic-compatible API surfaces can reduce client changes for tools that support custom base URLs.
+- Includes provider translation, key rotation, failover, load balancing, and a reusable resilience library.
+- Docker-based deployment path is useful for local or small self-hosted setups.
+
+**Cons**
+
+- GitHub does not currently expose license metadata for the repo, so teams should verify the effective license before adoption.
+- Key rotation across many upstream credentials can become a security and policy risk without careful secret management and audit controls.
+- More focused on proxy resilience than broader gateway governance; budgets, tenant isolation, dashboards, and enterprise policy may require additional tooling.
+
 ### LLM Gateway
 
 - GitHub: [theopenco/llmgateway](https://github.com/theopenco/llmgateway)
@@ -603,6 +625,7 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 | Self-hosted OpenAI-format API management and key redistribution gateway | One API |
 | Python/FastAPI gateway with dashboard analytics and protocol conversion | Squirrel |
 | Small importable or standalone Python/FastAPI OpenAI-compatible proxy | LM-Proxy |
+| OpenAI/Anthropic-compatible proxy with API-key rotation and failover | LLM API Key Proxy |
 | Dashboard-backed OpenAI-compatible gateway with key management and usage analytics | LLM Gateway |
 | Self-hosted OpenAI/Anthropic-compatible routing with project budgets and token isolation | Routerly |
 | OpenAI-compatible routing to private inference backends across NAT or private networks | OpenZiti LLM Gateway |
@@ -621,7 +644,7 @@ When comparing LLM gateways, check:
 - Routing, fallback, retry, and load-balancing behavior.
 - Prompt classification, semantic routing, and quality/cost policy behavior.
 - Streaming support and latency overhead.
-- Authentication, key management, budget controls, and tenant isolation.
+- Authentication, key management, API-key rotation, budget controls, and tenant isolation.
 - Logging, tracing, metrics, and cost attribution.
 - Guardrails, prompt/message policies, PII handling, and auditability.
 - Deployment model: library, sidecar, proxy, Kubernetes gateway, or full API gateway.
