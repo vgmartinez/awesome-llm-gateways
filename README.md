@@ -4,7 +4,7 @@ A curated list of open-source LLM gateways, AI gateways, and model-routing proxi
 
 LLM gateways sit between applications and model providers. They usually handle provider routing, retries, fallbacks, observability, budgets, access control, guardrails, and OpenAI-compatible API translation.
 
-Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, API-key-rotation LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
+Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, agentic data-plane gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, API-key-rotation LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
 
 This list prioritizes public repositories that act as gateway, proxy, router, or model-access infrastructure rather than generic SDKs or end-user AI applications.
 
@@ -26,6 +26,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 | OmniRoute | [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) | TypeScript | MIT | Developers and teams that want a local or hosted AI router for many providers and coding tools through one endpoint. | OpenAI-compatible APIs, broad provider catalog, multiple routing strategies, automatic fallback, prompt compression, format translation, MCP/A2A integrations, and desktop/PWA options. | Very broad product surface with marketing-heavy claims; production maturity, security model, and provider behavior should be validated carefully. |
 | NadirClaw | [NadirRouter/NadirClaw](https://github.com/NadirRouter/NadirClaw) | Python | MIT | Developers who want a local OpenAI/Anthropic-compatible router that sends simple prompts to cheaper or local models. | Prompt-complexity routing, coding-tool compatibility, OpenAI and Anthropic API surfaces, fallback chains, streaming, cost tracking, budgets, caching, dashboard, and Docker support. | Cost-savings claims and classifier accuracy should be validated on real workloads; local-first routing is less suited to teams that need centralized multi-tenant governance out of the box. |
 | Agentgateway | [agentgateway/agentgateway](https://github.com/agentgateway/agentgateway) | Rust | Apache-2.0 | Platform teams that need agentic AI traffic governance across LLM, MCP, and A2A flows. | OpenAI-compatible LLM routing, MCP and A2A gateway support, budget/spend controls, prompt enrichment, load balancing, failover, guardrails, auth/RBAC, OpenTelemetry, and Kubernetes options. | Broader agentic-proxy scope than a narrow model gateway; teams should validate LLM provider behavior and operational maturity against their own agent/tool traffic. |
+| Plano | [katanemo/plano](https://github.com/katanemo/plano) | Rust | Apache-2.0 | Teams building agentic applications that want an out-of-process proxy/data plane for orchestration, LLM routing, safety, and traces. | Envoy-rooted Rust proxy, OpenAI-compatible agent endpoints, semantic model aliases/preferences, guardrail filter chains, OpenTelemetry traces/metrics, YAML configuration, and hosted/local routing-model options. | Broader agentic-app platform than a minimal provider proxy; teams should validate routing-model dependency, local model setup, and production operations for their deployment. |
 | Envoy AI Gateway | [envoyproxy/ai-gateway](https://github.com/envoyproxy/ai-gateway) | Go | Apache-2.0 | Kubernetes/cloud-native teams already aligned with Envoy Gateway. | Built on Envoy Gateway, strong infrastructure pedigree, Kubernetes-native direction. | Younger project than general API gateways; feature surface may be narrower for app-level LLMOps needs. |
 | Higress | [higress-group/higress](https://github.com/higress-group/higress) | Go | Apache-2.0 | Cloud-native API gateway users that want AI gateway capability in one gateway. | AI-native API gateway, Envoy-based, API gateway plus AI routing patterns. | Operational model is closer to full API gateway infrastructure than lightweight app proxy. |
 | Inference Gateway | [inference-gateway/inference-gateway](https://github.com/inference-gateway/inference-gateway) | Go | MIT | Teams that want a self-hosted, lightweight gateway for multiple hosted and local providers. | Unified proxy for providers such as OpenAI, Ollama, Groq, Cohere, Anthropic, Cloudflare, and DeepSeek; streaming, MCP, OpenTelemetry, Docker, and Kubernetes support. | Routing model is environment/configuration driven; teams needing advanced policy, spend governance, or full API management may need surrounding tooling. |
@@ -175,6 +176,28 @@ Agentgateway is a Rust-based agentic AI proxy for LLM, MCP, and A2A traffic. Its
 - Broader agentic-proxy scope may be unnecessary for teams that only need a small OpenAI-compatible provider proxy.
 - Project is moving quickly, so exact LLM provider behavior, controller maturity, and policy workflows should be validated before production adoption.
 - MCP/A2A and agent governance features add concepts and operations beyond traditional model routing.
+
+### Plano
+
+- GitHub: [katanemo/plano](https://github.com/katanemo/plano)
+- Website/docs: [planoai.dev](https://planoai.dev)
+- Language: Rust
+- License: Apache-2.0
+
+Plano is a Rust-based AI-native proxy server and data plane for agentic applications. It moves agent orchestration, LLM routing, guardrail filter chains, and OpenTelemetry-based traces and metrics into an out-of-process layer configured with YAML, with OpenAI-compatible agent endpoints and model routing by provider model name, semantic alias, or preferences.
+
+**Pros**
+
+- Apache-2.0 licensed public repository with active development and clear AI gateway/proxy positioning.
+- Built around Envoy-style proxy infrastructure and agentic traffic patterns rather than only SDK-level provider calls.
+- Supports declarative agent routing, model-provider configuration, filter chains for moderation/safety hooks, and automatic observability.
+- Useful when agent services should stay framework-agnostic while sharing routing, safety, and tracing infrastructure.
+
+**Cons**
+
+- Broader agentic-app platform than a narrow OpenAI-compatible provider proxy, so it may be unnecessary for simple key aggregation.
+- Some routing examples depend on Plano-hosted or local purpose-built routing models; teams should validate that dependency and local model setup before production use.
+- Agent orchestration, filters, and tracing introduce more operational concepts than a minimal reverse proxy.
 
 ### Envoy AI Gateway
 
@@ -614,6 +637,7 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 | A local or hosted AI router for many coding tools and provider accounts | OmniRoute |
 | Local prompt-complexity routing for coding tools and cost control | NadirClaw |
 | Agentic AI traffic governance across LLM, MCP, and A2A flows | Agentgateway |
+| Agentic application data plane with orchestration, guardrails, LLM routing, and traces | Plano |
 | Kubernetes-native AI traffic management on Envoy | Envoy AI Gateway |
 | API gateway plus AI gateway in a cloud-native stack | Higress |
 | Lightweight self-hosted proxy for hosted and local providers | Inference Gateway |
@@ -647,6 +671,7 @@ When comparing LLM gateways, check:
 - Authentication, key management, API-key rotation, budget controls, and tenant isolation.
 - Logging, tracing, metrics, and cost attribution.
 - Guardrails, prompt/message policies, PII handling, and auditability.
+- Agent orchestration needs, including whether routing should happen between agent services as well as between model providers.
 - Deployment model: library, sidecar, proxy, Kubernetes gateway, or full API gateway.
 - License and commercial-use constraints.
 - Whether GitHub license metadata, README badges, and checked-in license files agree.
