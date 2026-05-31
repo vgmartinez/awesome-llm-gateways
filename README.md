@@ -4,7 +4,7 @@ A curated list of open-source LLM gateways, AI gateways, and model-routing proxi
 
 LLM gateways sit between applications and model providers. They usually handle provider routing, retries, fallbacks, observability, budgets, access control, guardrails, and OpenAI-compatible API translation.
 
-Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, agentic data-plane gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, API-key-rotation LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
+Related terms include AI gateway, model gateway, inference gateway, agent gateway, agentic AI gateway, agentic data-plane gateway, bidirectional AI gateway, spec-first AI gateway, OpenAPI-to-MCP gateway, MCP gateway, A2A gateway, LLM proxy, AI reverse proxy, model router, semantic router, prompt-routing AI gateway, adaptive-routing LLM gateway, zero-trust LLM gateway, coding-tool AI router, OpenAI-compatible proxy, Anthropic-compatible proxy, OpenAI Responses API proxy, OpenTelemetry LLM gateway, observability-first AI gateway, provider passthrough gateway, streaming-optimized AI gateway, semantic-cache AI gateway, dashboard-backed LLM gateway, key-management LLM gateway, API-key-rotation LLM gateway, quota-management AI gateway, budget-aware AI router, spend-cap LLM gateway, Python/FastAPI LLM proxy, importable LLM gateway, LLM API redistribution gateway, and API format-conversion gateway.
 
 This list prioritizes public repositories that act as gateway, proxy, router, or model-access infrastructure rather than generic SDKs or end-user AI applications.
 
@@ -27,6 +27,7 @@ This list prioritizes public repositories that act as gateway, proxy, router, or
 | NadirClaw | [NadirRouter/NadirClaw](https://github.com/NadirRouter/NadirClaw) | Python | MIT | Developers who want a local OpenAI/Anthropic-compatible router that sends simple prompts to cheaper or local models. | Prompt-complexity routing, coding-tool compatibility, OpenAI and Anthropic API surfaces, fallback chains, streaming, cost tracking, budgets, caching, dashboard, and Docker support. | Cost-savings claims and classifier accuracy should be validated on real workloads; local-first routing is less suited to teams that need centralized multi-tenant governance out of the box. |
 | Agentgateway | [agentgateway/agentgateway](https://github.com/agentgateway/agentgateway) | Rust | Apache-2.0 | Platform teams that need agentic AI traffic governance across LLM, MCP, and A2A flows. | OpenAI-compatible LLM routing, MCP and A2A gateway support, budget/spend controls, prompt enrichment, load balancing, failover, guardrails, auth/RBAC, OpenTelemetry, and Kubernetes options. | Broader agentic-proxy scope than a narrow model gateway; teams should validate LLM provider behavior and operational maturity against their own agent/tool traffic. |
 | Plano | [katanemo/plano](https://github.com/katanemo/plano) | Rust | Apache-2.0 | Teams building agentic applications that want an out-of-process proxy/data plane for orchestration, LLM routing, safety, and traces. | Envoy-rooted Rust proxy, OpenAI-compatible agent endpoints, semantic model aliases/preferences, guardrail filter chains, OpenTelemetry traces/metrics, YAML configuration, and hosted/local routing-model options. | Broader agentic-app platform than a minimal provider proxy; teams should validate routing-model dependency, local model setup, and production operations for their deployment. |
+| Barbacane | [barbacane-dev/barbacane](https://github.com/barbacane-dev/barbacane) | Rust | AGPL-3.0 | API/platform teams that want one spec-first gateway for outbound LLM calls and inbound MCP tool exposure. | OpenAI-compatible LLM dispatcher, OpenAI/Anthropic/Ollama provider fallback, OpenAPI-to-MCP exposure, token limits, prompt/response guards, Prometheus metrics, OpenTelemetry traces, and WASM plugin model. | AGPL/commercial licensing needs review; broader API gateway architecture may be more than teams need for a simple provider proxy. |
 | Envoy AI Gateway | [envoyproxy/ai-gateway](https://github.com/envoyproxy/ai-gateway) | Go | Apache-2.0 | Kubernetes/cloud-native teams already aligned with Envoy Gateway. | Built on Envoy Gateway, strong infrastructure pedigree, Kubernetes-native direction. | Younger project than general API gateways; feature surface may be narrower for app-level LLMOps needs. |
 | Higress | [higress-group/higress](https://github.com/higress-group/higress) | Go | Apache-2.0 | Cloud-native API gateway users that want AI gateway capability in one gateway. | AI-native API gateway, Envoy-based, API gateway plus AI routing patterns. | Operational model is closer to full API gateway infrastructure than lightweight app proxy. |
 | Inference Gateway | [inference-gateway/inference-gateway](https://github.com/inference-gateway/inference-gateway) | Go | MIT | Teams that want a self-hosted, lightweight gateway for multiple hosted and local providers. | Unified proxy for providers such as OpenAI, Ollama, Groq, Cohere, Anthropic, Cloudflare, and DeepSeek; streaming, MCP, OpenTelemetry, Docker, and Kubernetes support. | Routing model is environment/configuration driven; teams needing advanced policy, spend governance, or full API management may need surrounding tooling. |
@@ -198,6 +199,28 @@ Plano is a Rust-based AI-native proxy server and data plane for agentic applicat
 - Broader agentic-app platform than a narrow OpenAI-compatible provider proxy, so it may be unnecessary for simple key aggregation.
 - Some routing examples depend on Plano-hosted or local purpose-built routing models; teams should validate that dependency and local model setup before production use.
 - Agent orchestration, filters, and tracing introduce more operational concepts than a minimal reverse proxy.
+
+### Barbacane
+
+- GitHub: [barbacane-dev/barbacane](https://github.com/barbacane-dev/barbacane)
+- Website/docs: [barbacane.dev](https://barbacane.dev)
+- Language: Rust
+- License: AGPL-3.0
+
+Barbacane is a Rust-based bidirectional AI gateway for teams that want one spec-first layer for outbound LLM calls and inbound agent tool exposure. Its AI proxy dispatcher exposes an OpenAI-compatible API surface for providers such as OpenAI, Anthropic, and Ollama, while its OpenAPI extensions can expose existing API operations as MCP tools with the same auth, validation, rate-limit, and observability middleware.
+
+**Pros**
+
+- Public Rust repository with clear AI gateway, OpenAPI, AsyncAPI, and MCP positioning.
+- Combines outbound LLM routing with inbound OpenAPI-to-MCP exposure, which is useful for teams governing both app-to-model and agent-to-tool traffic.
+- Supports provider fallback, policy-driven targets, prompt and response guards, token limits, cost metrics, Prometheus, OpenTelemetry, and WASM plugin extensibility.
+- Spec-first design can reduce drift between API contracts, gateway policy, and agent-visible tools.
+
+**Cons**
+
+- AGPL-3.0/commercial licensing should be reviewed before hosted or embedded commercial deployment.
+- Broader API gateway and control/data-plane architecture can be heavier than a minimal OpenAI-compatible proxy.
+- Teams should validate provider translation, MCP exposure boundaries, and fail-closed guardrail behavior against their exact OpenAPI specs.
 
 ### Envoy AI Gateway
 
@@ -638,6 +661,7 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 | Local prompt-complexity routing for coding tools and cost control | NadirClaw |
 | Agentic AI traffic governance across LLM, MCP, and A2A flows | Agentgateway |
 | Agentic application data plane with orchestration, guardrails, LLM routing, and traces | Plano |
+| Spec-first outbound LLM routing plus inbound OpenAPI-to-MCP tool exposure | Barbacane |
 | Kubernetes-native AI traffic management on Envoy | Envoy AI Gateway |
 | API gateway plus AI gateway in a cloud-native stack | Higress |
 | Lightweight self-hosted proxy for hosted and local providers | Inference Gateway |
@@ -671,6 +695,7 @@ When comparing LLM gateways, check:
 - Authentication, key management, API-key rotation, budget controls, and tenant isolation.
 - Logging, tracing, metrics, and cost attribution.
 - Guardrails, prompt/message policies, PII handling, and auditability.
+- Spec-first gateway needs, including whether OpenAPI/AsyncAPI contracts should drive model routes, agent-visible tools, and policy enforcement.
 - Agent orchestration needs, including whether routing should happen between agent services as well as between model providers.
 - Deployment model: library, sidecar, proxy, Kubernetes gateway, or full API gateway.
 - License and commercial-use constraints.
