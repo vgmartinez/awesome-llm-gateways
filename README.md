@@ -45,6 +45,7 @@ Use this table for first-pass filtering. The detailed project notes below add co
 | Portkey Gateway | [Portkey-AI/gateway](https://github.com/Portkey-AI/gateway) | TypeScript | MIT | Product teams that want gateway plus guardrails and model routing. | Friendly API, many model integrations, guardrails, model router, permissive license. | Some ecosystem value is tied to Portkey's broader platform; self-hosting depth should be checked for each feature. |
 | Helicone AI Gateway | [Helicone/ai-gateway](https://github.com/Helicone/ai-gateway) | Rust | GPL-3.0 | Teams that want a lightweight OpenAI-compatible gateway with routing, rate limits, cache, and observability hooks. | Rust implementation, 100+ model/provider positioning, smart routing, fallbacks, rate limits, caching, Docker/self-hosting, and Helicone/OpenTelemetry observability. | License metadata should be reviewed because the repository sidebar and README text differ; some observability value is tied to the Helicone ecosystem. |
 | OmniRoute | [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) | TypeScript | MIT | Developers and teams that want a local or hosted AI router for many providers and coding tools through one endpoint. | OpenAI-compatible APIs, broad provider catalog, multiple routing strategies, automatic fallback, prompt compression, format translation, MCP/A2A integrations, and desktop/PWA options. | Very broad product surface with marketing-heavy claims; production maturity, security model, and provider behavior should be validated carefully. |
+| A3M Router | [Das-rebel/a3m-router](https://github.com/Das-rebel/a3m-router) | TypeScript | MIT | Teams that want parallel multi-LLM execution with confidence scoring and a small footprint. | Parallel ensemble routing, 47+ providers, semantic cache, circuit breaker, guardrails, and RouteLLM-style classification signals. | Newer project with a smaller community; benchmark, cost-savings, and routing-accuracy claims should be validated on your own workloads. |
 | NadirClaw | [NadirRouter/NadirClaw](https://github.com/NadirRouter/NadirClaw) | Python | MIT | Developers who want a local OpenAI/Anthropic-compatible router that sends simple prompts to cheaper or local models. | Prompt-complexity routing, coding-tool compatibility, OpenAI and Anthropic API surfaces, fallback chains, streaming, cost tracking, budgets, caching, dashboard, and Docker support. | Cost-savings claims and classifier accuracy should be validated on real workloads; local-first routing is less suited to teams that need centralized multi-tenant governance out of the box. |
 | Agentgateway | [agentgateway/agentgateway](https://github.com/agentgateway/agentgateway) | Rust | Apache-2.0 | Platform teams that need agentic AI traffic governance across LLM, MCP, and A2A flows. | OpenAI-compatible LLM routing, MCP and A2A gateway support, budget/spend controls, prompt enrichment, load balancing, failover, guardrails, auth/RBAC, OpenTelemetry, and Kubernetes options. | Broader agentic-proxy scope than a narrow model gateway; teams should validate LLM provider behavior and operational maturity against their own agent/tool traffic. |
 | Plano | [katanemo/plano](https://github.com/katanemo/plano) | Rust | Apache-2.0 | Teams building agentic applications that want an out-of-process proxy/data plane for orchestration, LLM routing, safety, and traces. | Envoy-rooted Rust proxy, OpenAI-compatible agent endpoints, semantic model aliases/preferences, guardrail filter chains, OpenTelemetry traces/metrics, YAML configuration, and hosted/local routing-model options. | Broader agentic-app platform than a minimal provider proxy; teams should validate routing-model dependency, local model setup, and production operations for their deployment. |
@@ -157,6 +158,28 @@ OmniRoute is a TypeScript AI gateway and router that exposes OpenAI-compatible e
 - The project has a very broad surface area, so teams should validate the specific gateway path they need instead of assuming every advertised workflow is production-ready.
 - README and positioning are marketing-heavy; claims around provider count, compression savings, and tool compatibility should be checked against real workloads.
 - More application-like than minimal gateway infrastructure, which may be unnecessary for teams that only need a small reverse proxy or Kubernetes-native gateway.
+
+### A3M Router
+
+- GitHub: [Das-rebel/a3m-router](https://github.com/Das-rebel/a3m-router)
+- npm: [adaptive-memory-multi-model-router](https://www.npmjs.com/package/adaptive-memory-multi-model-router)
+- Language: TypeScript
+- License: MIT
+
+A3M Router is an open-source TypeScript LLM router and AI gateway that can run providers in parallel, score responses, and return the best answer with transparent routing context. It routes across many provider targets using RouteLLM-style classification signals to balance cost, capability, and response quality.
+
+**Pros**
+
+- MIT licensed.
+- Parallel multi-LLM execution and ensemble-style response scoring are useful when answer quality matters more than a single sequential fallback path.
+- OpenAI-compatible proxy surface can fit existing SDKs and coding-tool workflows.
+- Lightweight TypeScript package with semantic cache, circuit breaker, prompt-injection guardrail patterns, budget enforcement, and episodic-memory positioning.
+
+**Cons**
+
+- Newer project with a smaller community and emerging production track record.
+- Published cost-savings, benchmark, and routing-accuracy claims should be validated against real traffic before adoption.
+- TypeScript/Node.js-focused project, so teams standardized on Python, Go, Rust, or Kubernetes-native gateways may prefer other options.
 
 ### NadirClaw
 
@@ -704,6 +727,7 @@ These are starting points, not final recommendations. Validate each candidate ag
 | Guardrails and app-team-friendly model routing | Portkey Gateway |
 | Lightweight Rust gateway with observability, caching, and rate limits | Helicone AI Gateway |
 | A local or hosted AI router for many coding tools and provider accounts | OmniRoute |
+| Parallel multi-LLM execution with confidence scoring | A3M Router |
 | Local prompt-complexity routing for coding tools and cost control | NadirClaw |
 | Agentic AI traffic governance across LLM, MCP, and A2A flows | Agentgateway |
 | Agentic application data plane with orchestration, guardrails, LLM routing, and traces | Plano |
