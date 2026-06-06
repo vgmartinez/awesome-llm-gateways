@@ -69,7 +69,7 @@ Use this table for first-pass filtering. The detailed project notes below add co
 | Bifrost | [maximhq/bifrost](https://github.com/maximhq/bifrost) | Go | Apache-2.0 | Teams optimizing for low-overhead model routing and gateway performance. | Go implementation, model routing, load balancing, guardrails, observability and cost-oriented features. | Younger than established API gateways; benchmark and feature claims should be verified in your workload. |
 | Traceloop Hub | [traceloop/hub](https://github.com/traceloop/hub) | Rust | Apache-2.0 | Teams that want a high-performance OpenAI-compatible gateway with tracing and metrics built in. | Rust gateway, OpenAI-compatible API, OpenTelemetry tracing, Prometheus metrics, YAML mode, PostgreSQL-backed management mode, and Kubernetes assets. | Provider coverage is narrower than broad aggregators; database mode adds PostgreSQL and management API operations. |
 | TensorZero | [tensorzero/tensorzero](https://github.com/tensorzero/tensorzero) | Rust | Apache-2.0 | Teams that want an LLM gateway tied to observability, evaluation, optimization, and experimentation. | Rust gateway, model access layer, feedback/evaluation loop, experimentation-oriented LLMOps platform. | Broader platform than a standalone proxy; teams should confirm they want the surrounding LLMOps workflow, not only request routing. |
-| CoderPlan | [coderplan.ai](https://coderplan.ai) | — | SaaS | Developers who want a managed LLM API gateway for Claude Code, Cursor, Codex CLI, and Gemini CLI without self-hosting. | OpenAI-compatible API, pay-per-use, Claude/GPT/Gemini/DeepSeek models, Hong Kong/Singapore edge nodes, free credits for new users. | Hosted service (not open-source); best fit for developers who want zero-config API access rather than self-hosted gateway infrastructure. |
+| CoderPlan | [coderplan.ai](https://coderplan.ai) | — | Proprietary | Developers who want a managed LLM API gateway for Claude Code, Cursor, Codex CLI, and Gemini CLI without self-hosting. | OpenAI-compatible API, pay-per-use, Claude/GPT/Gemini/DeepSeek models, Hong Kong/Singapore edge nodes, free credits for new users. | Hosted service (not open-source); best fit for developers who want zero-config API access rather than self-hosted gateway infrastructure. |
 
 ## Projects
 
@@ -674,6 +674,26 @@ TensorZero is an open-source LLMOps platform that includes an LLM gateway alongs
 - Broader than a narrow provider proxy, so adoption may involve more workflow and data-model decisions.
 - Best fit depends on whether the team wants TensorZero's LLMOps platform concepts, not only routing and fallback behavior.
 
+### CoderPlan
+
+- Website: [coderplan.ai](https://coderplan.ai)
+- Language: Not applicable for the hosted service
+- License: Proprietary
+
+CoderPlan is a managed LLM API gateway for developers who want one hosted endpoint for Claude Code, Cursor, Codex CLI, Gemini CLI, and similar coding tools without running their own gateway infrastructure.
+
+**Pros**
+
+- OpenAI-compatible API surface for common coding tools and CLI workflows.
+- Provides access to Claude, GPT, Gemini, DeepSeek, and related model options through a pay-per-use service.
+- Hosted deployment can be useful when zero-config onboarding matters more than self-hosted control.
+
+**Cons**
+
+- Proprietary hosted service rather than an open-source repository, so teams should validate pricing, data handling, and service terms before adoption.
+- Less suitable for teams that require self-hosting, source-code review, or full infrastructure control.
+- Regional edge-node and model-availability claims should be verified against the current service documentation.
+
 ## Choosing a Gateway
 
 These are starting points, not final recommendations. Validate each candidate against your traffic pattern, compliance needs, and deployment model.
@@ -708,6 +728,7 @@ These are starting points, not final recommendations. Validate each candidate ag
 | Low-overhead Go model routing and gateway performance | Bifrost |
 | OpenAI-compatible gateway traffic with built-in tracing and Prometheus metrics | Traceloop Hub |
 | Gateway traffic connected to evaluation and experimentation loops | TensorZero |
+| Managed coding-tool gateway without self-hosting | CoderPlan |
 
 ## Evaluation Criteria
 
