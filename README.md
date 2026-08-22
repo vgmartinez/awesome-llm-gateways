@@ -74,6 +74,7 @@ Use this table for **first-pass filtering**. The detailed project notes below ad
 | Kong Gateway | [Kong/kong](https://github.com/Kong/kong) | Lua | Apache-2.0 | Enterprises that already need API management and want AI gateway features in the same stack. | Mature API gateway, plugin ecosystem, AI gateway and MCP-related features, strong operations story. | Heavier than purpose-built LLM proxies; some advanced workflows may depend on Kong ecosystem/product choices. |
 | Apache APISIX | [apache/apisix](https://github.com/apache/apisix) | Lua | Apache-2.0 | Teams that want a cloud-native API gateway with AI gateway capabilities. | Mature Apache project, API management, Kubernetes ingress, plugins, AI gateway direction. | More general-purpose API gateway than LLM-specific proxy; AI workflows may need plugin/configuration work. |
 | Bifrost | [maximhq/bifrost](https://github.com/maximhq/bifrost) | Go | Apache-2.0 | Teams optimizing for low-overhead model routing and gateway performance. | Go implementation, model routing, load balancing, guardrails, observability and cost-oriented features. | Younger than established API gateways; benchmark and feature claims should be verified in your workload. |
+| TrustGate | [NeuralTrust/TrustGate](https://github.com/NeuralTrust/TrustGate) | Go | Apache-2.0 | Teams that need a security-first self-hosted Agent Gateway for LLM and MCP traffic with consumer auth and policy plugins. | Single Go binary with Admin/Proxy/MCP planes, multi-provider OpenAI-compatible proxy, rate/token limits, semantic cache, MCP aggregation for agents. | Younger public footprint than LiteLLM/Portkey; validate ops (Postgres/Redis) and provider coverage against your workload. |
 | Traceloop Hub | [traceloop/hub](https://github.com/traceloop/hub) | Rust | Apache-2.0 | Teams that want a high-performance OpenAI-compatible gateway with tracing and metrics built in. | Rust gateway, OpenAI-compatible API, OpenTelemetry tracing, Prometheus metrics, YAML mode, PostgreSQL-backed management mode, and Kubernetes assets. | Provider coverage is narrower than broad aggregators; database mode adds PostgreSQL and management API operations. |
 | TensorZero | [tensorzero/tensorzero](https://github.com/tensorzero/tensorzero) | Rust | Apache-2.0 | Teams that want an LLM gateway tied to observability, evaluation, optimization, and experimentation. | Rust gateway, model access layer, feedback/evaluation loop, experimentation-oriented LLMOps platform. | Broader platform than a standalone proxy; teams should confirm they want the surrounding LLMOps workflow, not only request routing. |
 | CoderPlan | [coderplan.ai](https://coderplan.ai) | — | Proprietary | Developers who want a managed LLM API gateway for Claude Code, Cursor, Codex CLI, and Gemini CLI without self-hosting. | OpenAI-compatible API, pay-per-use, Claude/GPT/Gemini/DeepSeek models, Hong Kong/Singapore edge nodes, free credits for new users. | Hosted service (not open-source); best fit for developers who want zero-config API access rather than self-hosted gateway infrastructure. |
@@ -663,6 +664,14 @@ Bifrost is a Go-based AI gateway focused on model routing, load balancing, guard
 - Younger than mature API gateway stacks such as Kong or APISIX.
 - Published performance and feature claims should be validated against your deployment shape, providers, and traffic patterns.
 
+### TrustGate
+
+- Repository: [NeuralTrust/TrustGate](https://github.com/NeuralTrust/TrustGate)
+- Language / license: Go / Apache-2.0
+- Best fit: teams that want a **security-first, self-hosted Agent Gateway** for LLM and MCP traffic with shared consumer identity and policy plugins.
+- Notes: ships Admin, Proxy, and MCP planes in one binary; OpenAI-compatible clients point at the proxy with gateway/consumer headers. Docs: [docs.neuraltrust.ai](https://docs.neuraltrust.ai/trustgate/overview).
+
+
 ### Traceloop Hub
 
 - GitHub: [traceloop/hub](https://github.com/traceloop/hub)
@@ -787,6 +796,7 @@ These are **starting points**, not final recommendations. Validate each candidat
 | Enterprise API management plus AI gateway features | Kong Gateway |
 | Apache API gateway maturity with AI gateway direction | Apache APISIX |
 | Low-overhead Go model routing and gateway performance | Bifrost |
+| Security-first LLM + MCP Agent Gateway (self-hosted Go) | TrustGate |
 | OpenAI-compatible gateway traffic with built-in tracing and Prometheus metrics | Traceloop Hub |
 | Gateway traffic connected to evaluation and experimentation loops | TensorZero |
 | Managed coding-tool gateway without self-hosting | CoderPlan |
